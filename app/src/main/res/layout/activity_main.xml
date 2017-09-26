@@ -19,5 +19,12 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:onClick="play"
-        android:text="播放" />
+        android:text="AudioTrack播放" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:onClick="sound"
+        android:text="openSL播放" />
 </LinearLayout>

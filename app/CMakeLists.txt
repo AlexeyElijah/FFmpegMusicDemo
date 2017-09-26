@@ -6,6 +6,10 @@ find_library( log-lib
               log )
 find_library( android-lib
               android )
+#openSL库
+find_library( OpenSLES-lib
+              OpenSLES )
+
 #设置变量
 set(DIR ../../../../libs)
 
@@ -72,7 +76,8 @@ include_directories(libs/include)
 #引入自己的库
 add_library( native-lib
              SHARED
-             src/main/cpp/native-lib.cpp )
+             src/main/cpp/native-lib.cpp
+             src/main/cpp/FFmpegMusic.cpp)
 
 #链接的目标库
 target_link_libraries( native-lib
@@ -85,4 +90,5 @@ target_link_libraries( native-lib
                        swresample-1
                        swscale-3
                        ${log-lib}
-                       ${android-lib})
+                       ${android-lib}
+                       ${OpenSLES-lib})

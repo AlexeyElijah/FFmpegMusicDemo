@@ -28,13 +28,17 @@ public class MusicPlayer {
     }
 
     /**
+     * 转换成pcm文件
+     *
      * @param input  输入文件的路径
      * @param output 输出文件的路径
      */
     public native void changeFile(String input, String output);
 
     /**
-     * @param input  输入文件的路径
+     * AudioTrack播放
+     *
+     * @param input 输入文件的路径
      */
     public native void play(String input);
 
@@ -69,4 +73,11 @@ public class MusicPlayer {
             audioTrack.write(buffer, 0, length);
         }
     }
+
+    /**
+     * openSL播放
+     *
+     * @param input 输入文件的路径
+     */
+    public native void sound(String input);
 }

@@ -16,6 +16,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    /**
+     * 转换成pcm文件
+     *
+     * @param view
+     */
     public void change(View view) {
         MusicPlayer musicPlayer = new MusicPlayer();
         File inputFile = new File(Environment.getExternalStorageDirectory(), "input.mp3");
@@ -32,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
         musicPlayer.changeFile(input, output);
     }
 
+    /**
+     * AudioTrack播放
+     *
+     * @param view
+     */
     public void play(View view) {
         MusicPlayer musicPlayer = new MusicPlayer();
         File inputFile = new File(Environment.getExternalStorageDirectory(), "input.mp3");
@@ -41,5 +51,15 @@ public class MainActivity extends AppCompatActivity {
         }
         String input = inputFile.getAbsolutePath();
         musicPlayer.play(input);
+    }
+
+    /**
+     * openSL播放
+     *
+     * @param view
+     */
+    public void sound(View view) {
+        MusicPlayer musicPlayer = new MusicPlayer();
+        musicPlayer.sound("/sdcard/input.mp3");
     }
 }
