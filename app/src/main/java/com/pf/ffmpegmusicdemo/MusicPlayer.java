@@ -80,4 +80,9 @@ public class MusicPlayer {
      * @param input 输入文件的路径
      */
     public native void sound(String input);
+
+    /**
+     * 对openSL播放停止播放
+     */
+    public native void stop();
 }

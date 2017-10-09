@@ -33,18 +33,18 @@ SLObjectItf outputMixObject = NULL;
 
 const SLEnvironmentalReverbSettings settings = SL_I3DL2_ENVIRONMENT_PRESET_DEFAULT;
 //缓冲队列播放器接口
-SLObjectItf bqPlayerObject = NULL;
+SLObjectItf bgPlayerObject = NULL;
 //播放接口
-SLPlayItf bqPlayerPlay;
+SLPlayItf bgPlayerPlay;
 //缓冲器队列接口
-SLAndroidSimpleBufferQueueItf bqPlayerBufferQueue;
+SLAndroidSimpleBufferQueueItf bgPlayerBufferQueue;
 //音量
-SLVolumeItf bqPlayerVolume;
+SLVolumeItf bgPlayerVolume;
 size_t bufferSize;
 void *buffer;
 
 // 当喇叭播放完声音时回调此方法
-void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
+void bgPlayerCallback(SLAndroidSimpleBufferQueueItf bg, void *context) {
     bufferSize = 0;
     //assert(NULL == context);
     getPCM(&buffer, &bufferSize);
@@ -52,23 +52,23 @@ void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
     if (NULL != buffer && 0 != bufferSize) {
         SLresult result;
         // enqueue another buffer
-        result = (*bqPlayerBufferQueue)->Enqueue(bqPlayerBufferQueue, buffer, bufferSize);
+        result = (*bgPlayerBufferQueue)->Enqueue(bgPlayerBufferQueue, buffer, bufferSize);
         // the most likely other result is SL_RESULT_BUFFER_INSUFFICIENT,
         // which for this code example would indicate a programming error
         assert(SL_RESULT_SUCCESS == result);
-        LOGE("pf bqPlayerCallback :%d", result);
+        LOGE("pf bgPlayerCallback :%d", result);
     }
 }
 
 // shut down the native audio system
 void shutdown() {
     // destroy buffer queue audio player object, and invalidate all associated interfaces
-    if (bqPlayerObject != NULL) {
-        (*bqPlayerObject)->Destroy(bqPlayerObject);
-        bqPlayerObject = NULL;
-        bqPlayerPlay = NULL;
-        bqPlayerBufferQueue = NULL;
-        bqPlayerVolume = NULL;
+    if (bgPlayerObject != NULL) {
+        (*bgPlayerObject)->Destroy(bgPlayerObject);
+        bgPlayerObject = NULL;
+        bgPlayerPlay = NULL;
+        bgPlayerBufferQueue = NULL;
+        bgPlayerVolume = NULL;
     }
 
     // destroy output mix object, and invalidate all associated interfaces
@@ -334,26 +334,34 @@ Java_com_pf_ffmpegmusicdemo_MusicPlayer_sound(JNIEnv *env, jobject instance, jst
     const SLboolean req[3] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE,
             /*SL_BOOLEAN_TRUE,*/ SL_BOOLEAN_TRUE};
     int result = SL_RESULT_SUCCESS == sLresult;
-    sLresult = (*engineEngine)->CreateAudioPlayer(engineEngine, &bqPlayerObject, &slDataSource,
+    sLresult = (*engineEngine)->CreateAudioPlayer(engineEngine, &bgPlayerObject, &slDataSource,
                                                   &pAudioSnk, 3, ids, req);
-    LOGE("初始化播放器:%d,是否成功:%d,bqPlayerObject:%d", sLresult, result, bqPlayerObject);
+    LOGE("初始化播放器:%d,是否成功:%d,bgPlayerObject:%d", sLresult, result, bgPlayerObject);
 
     //初始化播放器
-    (*bqPlayerObject)->Realize(bqPlayerObject, SL_BOOLEAN_FALSE);
+    (*bgPlayerObject)->Realize(bgPlayerObject, SL_BOOLEAN_FALSE);
     //得到接口后调用,获取player接口
-    (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_PLAY, &bqPlayerPlay);
+    (*bgPlayerObject)->GetInterface(bgPlayerObject, SL_IID_PLAY, &bgPlayerPlay);
     //注册回调缓冲区,获取缓冲队列接口
-    (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_BUFFERQUEUE, &bqPlayerBufferQueue);
+    (*bgPlayerObject)->GetInterface(bgPlayerObject, SL_IID_BUFFERQUEUE, &bgPlayerBufferQueue);
     LOGE("获取缓冲区数据");
     //缓冲接口回调
-    (*bqPlayerBufferQueue)->RegisterCallback(bqPlayerBufferQueue, bqPlayerCallback, NULL);
+    (*bgPlayerBufferQueue)->RegisterCallback(bgPlayerBufferQueue, bgPlayerCallback, NULL);
     //获取音量接口
-    (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_VOLUME, &bqPlayerVolume);
+    (*bgPlayerObject)->GetInterface(bgPlayerObject, SL_IID_VOLUME, &bgPlayerVolume);
     //获取播放状态接口
-    (*bqPlayerPlay)->SetPlayState(bqPlayerPlay, SL_PLAYSTATE_PLAYING);
+    (*bgPlayerPlay)->SetPlayState(bgPlayerPlay, SL_PLAYSTATE_PLAYING);
 
-    bqPlayerCallback(bqPlayerBufferQueue, NULL);
+    bgPlayerCallback(bgPlayerBufferQueue, NULL);
 
     env->ReleaseStringUTFChars(input_, input);
+}
+
+/**
+ * 对openSL播放停止播放
+ */
+JNIEXPORT void JNICALL
+Java_com_pf_ffmpegmusicdemo_MusicPlayer_stop(JNIEnv *env, jobject instance) {
+    shutdown();
 }
 }

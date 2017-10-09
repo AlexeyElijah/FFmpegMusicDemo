@@ -10,6 +10,8 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
+    private MusicPlayer openSLMusicPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +66,16 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "文件不存在", Toast.LENGTH_SHORT).show();
             return;
         }
-        MusicPlayer musicPlayer = new MusicPlayer();
-        musicPlayer.sound("/sdcard/input.mp3");
+        openSLMusicPlayer = new MusicPlayer();
+        openSLMusicPlayer.sound("/sdcard/input.mp3");
+    }
+
+    /**
+     * 停止播放
+     */
+    public void stop(View view) {
+        if (openSLMusicPlayer != null) {
+            openSLMusicPlayer.stop();
+        }
     }
 }

@@ -85,7 +85,6 @@ void getPCM(void **pcm, size_t *size) {
     }
 }
 
-
 void release() {
     av_free_packet(packet);
     av_free(out_buffer);
