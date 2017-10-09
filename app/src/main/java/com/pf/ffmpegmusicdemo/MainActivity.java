@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void change(View view) {
-        MusicPlayer musicPlayer = new MusicPlayer();
         File inputFile = new File(Environment.getExternalStorageDirectory(), "input.mp3");
         if (!inputFile.exists()) {
             Toast.makeText(this, "文件不存在", Toast.LENGTH_SHORT).show();
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
             outputFile.delete();
         }
         String output = outputFile.getAbsolutePath();
+        MusicPlayer musicPlayer = new MusicPlayer();
         musicPlayer.changeFile(input, output);
     }
 
@@ -43,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void play(View view) {
-        MusicPlayer musicPlayer = new MusicPlayer();
         File inputFile = new File(Environment.getExternalStorageDirectory(), "input.mp3");
         if (!inputFile.exists()) {
             Toast.makeText(this, "文件不存在", Toast.LENGTH_SHORT).show();
             return;
         }
         String input = inputFile.getAbsolutePath();
+        MusicPlayer musicPlayer = new MusicPlayer();
         musicPlayer.play(input);
     }
 
@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void sound(View view) {
+        File inputFile = new File(Environment.getExternalStorageDirectory(), "input.mp3");
+        if (!inputFile.exists()) {
+            Toast.makeText(this, "文件不存在", Toast.LENGTH_SHORT).show();
+            return;
+        }
         MusicPlayer musicPlayer = new MusicPlayer();
         musicPlayer.sound("/sdcard/input.mp3");
     }
