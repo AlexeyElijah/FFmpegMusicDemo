@@ -316,6 +316,7 @@ Java_com_pf_ffmpegmusicdemo_MusicPlayer_sound(JNIEnv *env, jobject instance, jst
     //配置信息设置
     SLDataLocator_AndroidSimpleBufferQueue android_queue =
             {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
+    //参数:pcm,通道数,采样率,采样位数,包含位数,声道,end标志位
     SLDataFormat_PCM pcm = {SL_DATAFORMAT_PCM, 2, SL_SAMPLINGRATE_44_1,
                             SL_PCMSAMPLEFORMAT_FIXED_16, SL_PCMSAMPLEFORMAT_FIXED_16,
                             SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
